@@ -1,0 +1,43 @@
+1- A partir du projet laravel existant
+2-Ajoutez les packages suivants dans votre composer.json.
+"require": {
+    "infyomlabs/laravel-generator": "6.0.x-dev",
+    "laravelcollective/html": "^6.0",
+    "infyomlabs/adminlte-templates": "6.0.x-dev"
+}  
+3-Si vous souhaitez utiliser l' option Générer à partir de la table , vous devez installer,
+importer les tables de la BD vers le code
+"require": {
+    "doctrine/dbal": "~2.3"
+} 
+4-composer update(permet de telecharger les packages ajoutes dans le fichier compser.json)
+5-copier le fichier .env.example et creer un fichier .env le coller et renommer la BD
+6-dans config/app.php providers coller 
+Collective\Html\HtmlServiceProvider::class,
+Laracasts\Flash\FlashServiceProvider::class,
+Prettus\Repository\Providers\RepositoryServiceProvider::class,
+\InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
+\InfyOm\AdminLTETemplates\AdminLTETemplatesServiceProvider::class,
+
+7- dans config/app.php alias coller 
+'Form'      => Collective\Html\FormFacade::class,
+'Html'      => Collective\Html\HtmlFacade::class,
+'Flash'     => Laracasts\Flash\Flash::class,
+
+8- php artisan vendor:publish after 0 enter
+
+9- Ouvrez app\Providers\RouteServiceProvider.phpet mettez à jour la mapApiRoutesméthode comme suit:
+
+Route::prefix('api')
+    ->middleware('api')
+    ->as('api.')
+    ->namespace($this->namespace."\\API")
+    ->group(base_path('routes/api.php'));  
+
+    10- Publier des trucs de générateur:
+    php artisan infyom:publish
+    11-php artisan infyom.publish:layout  creer une page de connexion
+    12-Maintenant, vous devez activer l'option de menu dans config/infyom/laravel_generator.php. Rendre l'option de menu vraie.
+    'add_on' => [ 'menu' => [ 'enabled' => true ] ] 
+
+13-php artisan infyom:scaffold $MODEL_NAME --fromTable --tableName=$TABLE_NAME
