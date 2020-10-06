@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use Response;
+use App\Models\Compte;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Repositories\CompteRepository;
+use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\CreateCompteAPIRequest;
 use App\Http\Requests\API\UpdateCompteAPIRequest;
-use App\Models\Compte;
-use App\Repositories\CompteRepository;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
-use Response;
 
 /**
  * Class CompteController
@@ -43,6 +44,8 @@ class CompteAPIController extends AppBaseController
         return $this->sendResponse($comptes->toArray(), 'Comptes retrieved successfully');
     }
 
+    
+    
     /**
      * Store a newly created Compte in storage.
      * POST /comptes
@@ -60,6 +63,8 @@ class CompteAPIController extends AppBaseController
         return $this->sendResponse($compte->toArray(), 'Compte saved successfully');
     }
 
+   /*
+   
     /**
      * Display the specified Compte.
      * GET|HEAD /comptes/{id}
@@ -67,10 +72,11 @@ class CompteAPIController extends AppBaseController
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse|Response
-     */
+     *
+     * /
     public function show($id)
     {
-        /** @var Compte $compte */
+        /** @var Compte $compte * /
         $compte = $this->compteRepository->find($id);
 
         if (empty($compte)) {
@@ -79,6 +85,31 @@ class CompteAPIController extends AppBaseController
 
         return $this->sendResponse($compte->toArray(), 'Compte retrieved successfully');
     }
+    */
+
+
+    /** 
+     * Display the specified Comptes.
+     * GET|HEAD /comptes/{numero_compte}
+     *
+     * @param string $numeroCompte
+     *
+     * @return Response
+     */
+    public function show($numeroCompte)
+    {
+        
+        $result = DB::table('compte')->where('numero_compte', $numeroCompte)->first();
+
+        if (empty($result)) {
+            return $this->sendError('Comptes not  found');
+        }
+
+        return $this->sendResponse($result, 'Compte retrieved successfully');
+    }
+
+
+
 
     /**
      * Update the specified Compte in storage.

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use Response;
+use App\Models\Operation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Repositories\OperationRepository;
+use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\CreateOperationAPIRequest;
 use App\Http\Requests\API\UpdateOperationAPIRequest;
-use App\Models\Operation;
-use App\Repositories\OperationRepository;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
-use Response;
 
 /**
  * Class OperationController
@@ -60,6 +61,8 @@ class OperationAPIController extends AppBaseController
         return $this->sendResponse($operation->toArray(), 'Operation saved successfully');
     }
 
+
+    /*
     /**
      * Display the specified Operation.
      * GET|HEAD /operations/{id}
@@ -67,10 +70,10 @@ class OperationAPIController extends AppBaseController
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse|Response
-     */
+     * /
     public function show($id)
     {
-        /** @var Operation $operation */
+        /** @var Operation $operation * /
         $operation = $this->operationRepository->find($id);
 
         if (empty($operation)) {
@@ -79,6 +82,35 @@ class OperationAPIController extends AppBaseController
 
         return $this->sendResponse($operation->toArray(), 'Operation retrieved successfully');
     }
+    */
+    
+    //Recupération de toutes les opérations suivant le numéro compte donné
+    /** 
+     * Display the specified Operations
+     * GET|HEAD /operations/{numeroCompte}
+     *
+     * @param string $numeroCompte
+     *
+     * @return Response
+     */
+    public function show($numeroCompte)
+    {
+        //Recupération de l'id suivant le numéro_compte
+        $comptes = DB::table('compte')->where('numero_compte', $numeroCompte)->first();
+        $id = $comptes->id;
+
+        /* @ var Operations $operations */
+        //$operations = $this->operationsRepository->find($id);
+        $operations = DB::table('operation')->where('compte_id', $id)->get();
+
+        if (empty($operations)) {
+            return $this->sendError('Operations not found');
+        }
+
+        return $this->sendResponse($operations, 'Operations retrieved successfully');
+    }
+
+
 
     /**
      * Update the specified Operation in storage.

@@ -66,7 +66,7 @@ class CompteController extends AppBaseController
 
         return redirect(route('comptes.index'));
     }
-
+ 
     /**
      * Display the specified Compte.
      *
